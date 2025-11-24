@@ -23,5 +23,8 @@ jobs:
         run: |
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       
+      - name: Run unit tests
+        run: python3 -m unittest discover -s test
+      
       - name: Build Docker Image
         run: docker build -t mileage_app .
