@@ -24,3 +24,9 @@ docker build -t mileage_app .
         xhost +
         docker run -e DISPLAY=host.docker.internal:0 -v /tmp/.X11-unix:/tmp/.X11-unix -it --rm mileage_app
         ```
+
+4. Testes
+Os testes da aplicação encontram-se no diretório test. A execução dos casos de testes podem ser realizada executando o seguinte comando dentro do diretório raiz do projeto
+```
+python3 -m unittest discover -s test
+```
