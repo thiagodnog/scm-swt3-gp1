@@ -25,6 +25,8 @@ jobs:
       
       - name: Run unit tests
         run: |
+          sudo apt-get update
+          sudo apt-get install x11-utils
           export DISPLAY=0.0
           xhost +
           python3 -m unittest discover -s test 
