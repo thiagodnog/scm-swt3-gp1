@@ -126,6 +126,9 @@ Os testes da aplicação encontram-se no diretório test. Execute:
 ```
 python3 -m unittest discover -s test
 ```
+## Exemplo de uso com Google Maps
+
+![Tela do Mileage Tracker mostrando distância via Google Maps](docs/img/mileage-gmaps-example.png)
 
 ## Observações
 - A aplicação grava em /aplication/data/trips.csv dentro do container; ao mapear ./data do host para /aplication/data, os registros ficam no host.
