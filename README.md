@@ -81,6 +81,11 @@ A ferramenta automatiza o cálculo da distância e permite a exportação de tod
     docker run -e DISPLAY=host.docker.internal:0.0 --env-file .env -v "%cd%/data:/aplication/data" -it --rm mileage_app
     ```
   - Assim como nos outros sistemas, se você não quiser usar a integração com Google Maps dentro do container, pode omitir `--env-file .env`.
+    
+  - Se estiver usando WSL2 + X server no Windows, ajuste o DISPLAY conforme seu setup, por exemplo:
+    ```
+    export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
+    ```
 
 5. Execução local sem Docker (para teste rápido)
    - Antes da primeira execução local, instale as dependências Python (incluindo o cliente HTTP e o carregador de variáveis de ambiente usados pela API do Google):
