@@ -1,5 +1,6 @@
 import unittest
 import tkinter as tk
+from unittest.mock import patch, MagicMock
 from app.app import MileageTracker
 import tempfile
 import os
@@ -82,6 +83,85 @@ class Test1(unittest.TestCase):
         #Listbox de Registros
         self.assertIsInstance(self.app.listbox, tk.Listbox, "Campo ultimos registros não encontrado")
             
+class TestGoogleMapsDistance(unittest.TestCase):
+    def setUp(self):
+        # Cria a janela raiz e a app
+        self.root = tk.Tk()
+        self.app = MileageTracker(self.root)
+        self.root.withdraw()
+
+        # Garante que a app tenha uma "chave" para não cair no erro de chave ausente
+        self.app.api_key = "fake-api-key-for-tests"
+
+    def tearDown(self):
+        self.root.destroy()
+
+    @patch("app.app.requests.post")
+    def test_get_distance_from_gmaps_success(self, mock_post):
+        """
+        Caso de sucesso: a API retorna uma rota com distanceMeters
+        e a função converte corretamente para km.
+        """
+        mock_response = MagicMock()
+        mock_response.ok = True
+        mock_response.json.return_value = {
+            "routes": [{"distanceMeters": 12345}]  # 12.345 km
+        }
+        mock_post.return_value = mock_response
+
+        distance = self.app.get_distance_from_gmaps("Origem X", "Destino Y")
+
+        # 12345 m = 12.345 km
+        self.assertAlmostEqual(distance, 12.345, places=3)
+        mock_post.assert_called_once()  # garante que fez a chamada HTTP simulada
+
+    def test_get_distance_from_gmaps_missing_api_key(self):
+        """
+        Se não houver API key configurada, deve lançar RuntimeError
+        antes de tentar chamar a API.
+        """
+        self.app.api_key = ""  # força estado "sem chave"
+
+        with self.assertRaises(RuntimeError) as ctx:
+            self.app.get_distance_from_gmaps("Origem X", "Destino Y")
+
+        self.assertIn("Chave da API do Google Maps não configurada", str(ctx.exception))
+
+    @patch("app.app.requests.post")
+    def test_get_distance_from_gmaps_http_error(self, mock_post):
+        """
+        Se a API responder com erro HTTP (ex.: 400, 500),
+        a função deve lançar RuntimeError com a mensagem adequada.
+        """
+        mock_response = MagicMock()
+        mock_response.ok = False
+        mock_response.status_code = 400
+        mock_response.json.return_value = {"error": {"message": "Invalid request"}}
+        mock_post.return_value = mock_response
+
+        with self.assertRaises(RuntimeError) as ctx:
+            self.app.get_distance_from_gmaps("Origem X", "Destino Y")
+
+        self.assertIn("Erro HTTP 400", str(ctx.exception))
+        self.assertIn("Invalid request", str(ctx.exception))
+
+    @patch("app.app.requests.post")
+    def test_get_distance_from_gmaps_no_routes(self, mock_post):
+        """
+        Se a API não retornar nenhuma rota, deve lançar RuntimeError
+        com mensagem clara.
+        """
+        mock_response = MagicMock()
+        mock_response.ok = True
+        mock_response.json.return_value = {
+            "routes": []  # sem rotas
+        }
+        mock_post.return_value = mock_response
+
+        with self.assertRaises(RuntimeError) as ctx:
+            self.app.get_distance_from_gmaps("Origem X", "Destino Y")
+
+        self.assertIn("não retornou nenhuma rota", str(ctx.exception))
 
 
 
