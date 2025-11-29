@@ -13,50 +13,79 @@ A ferramenta automatiza o cálculo da distância e permite a exportação de tod
 ## Executando a aplicação
 
 1. Faça clone do repositório ou baixe o ZIP.
-2. No diretório principal do projeto, crie a imagem Docker:
-   ```
+
+2. (Opcional, mas recomendado) Configure a chave da Google Maps API:
+   - Crie o arquivo `.env` na **raiz** do projeto (mesmo nível de `Dockerfile`), a partir do `.env.example`.
+   - Dentro dele, defina:
+     ```env
+     GOOGLE_MAPS_API_KEY=SUA_CHAVE_AQUI
+     ```
+   - Se esse arquivo não existir, a aplicação continuará funcionando apenas com o cálculo de distância via hodômetro.
+
+3. No diretório principal do projeto, crie a imagem Docker:
+   ```bash
    docker build -t mileage_app .
    ```
 
-3. Crie a pasta de dados (host) para persistência do CSV:
-   ```
-   mkdir -p data
-   ```
+4. Crie a pasta de dados (no host) para persistência do CSV:
+   - **Linux / macOS:**
+     ```bash
+     mkdir -p data
+     ```
+   - **Windows (PowerShell / CMD):**
+     ```powershell
+     mkdir data
+     ```
 
-4. Execução por sistema operacional
+5. Execução por sistema operacional
 
-- Linux (X11 nativo)
+- **Linux (X11 nativo)**
   - Permita acesso ao X para o container e rode:
-    ```
+    ```bash
     xhost +local:root
     docker run -e DISPLAY=$DISPLAY \
+      --env-file .env \
       -v /tmp/.X11-unix:/tmp/.X11-unix \
       -v "$(pwd)/data":/aplication/data \
       -it --rm mileage_app
     xhost -local:root
     ```
+  - Se você não configurou a API do Google Maps (não tem .env), pode remover a opção `--env-file .env`.
 
-- macOS (XQuartz)
-  - Instale e abra o XQuartz. Em Preferences → Security, habilite "Allow connections from network clients". Reinicie o XQuartz.
+- **macOS (XQuartz)**
+  - Instale e abra o XQuartz. Em Preferences → Security, habilite “Allow connections from network clients”. Reinicie o XQuartz.
   - No terminal:
-    ```
+    ```bash
     xhost + 127.0.0.1
     docker run -e DISPLAY=host.docker.internal:0 \
+      --env-file .env \
       -v "$(pwd)/data":/aplication/data \
       -it --rm mileage_app
     xhost - 127.0.0.1
     ```
   - Observação: algumas configurações podem exigir ajustes no DISPLAY (por exemplo host.docker.internal:0.0).
+  - Se não for usar a API do Google Maps dentro do container, remova `--env-file .env`.
 
-- Windows (VcXsrv / Xming / Docker Desktop)
-  - Inicie VcXsrv (ou Xming) com "Disable access control" para testes locais.
-  - Abra PowerShell/CMD no diretório do projeto:
-    ```
-    docker run -e DISPLAY=host.docker.internal:0 \
-      -v "%cd%/data":/aplication/data \
+- **Windows (VcXsrv / Xming / Docker Desktop)**
+  - Inicie o VcXsrv (ou Xming) com “Disable access control” habilitado (para testes locais).
+  - No PowerShell, no diretório do projeto:
+    ```powershell
+    docker run -e DISPLAY=host.docker.internal:0.0 `
+      --env-file .env `
+      -v "${PWD}/data:/aplication/data" `
       -it --rm mileage_app
     ```
-  - Se usar WSL2 + X server no Windows, ajuste DISPLAY conforme seu setup (ex.: export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0).
+  - Use `${PWD}` em PowerShell para referenciar o diretório atual.
+  - Se estiver usando CMD em vez de PowerShell, o comando equivalente para o volume é:
+    ```cmd
+    docker run -e DISPLAY=host.docker.internal:0.0 --env-file .env -v "%cd%/data:/aplication/data" -it --rm mileage_app
+    ```
+  - Assim como nos outros sistemas, se você não quiser usar a integração com Google Maps dentro do container, pode omitir `--env-file .env`.
+    
+  - Se estiver usando WSL2 + X server no Windows, ajuste o DISPLAY conforme seu setup, por exemplo:
+    ```
+    export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
+    ```
 
 5. Execução local sem Docker (para teste rápido)
    - Antes da primeira execução local, instale as dependências Python (incluindo o cliente HTTP e o carregador de variáveis de ambiente usados pela API do Google):
