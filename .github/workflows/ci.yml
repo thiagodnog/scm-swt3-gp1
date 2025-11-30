@@ -2,7 +2,7 @@ name: Continuous Integration - Testes e Docker
 
 on:
   push:
-    branches: ["feature", "workflow", "main"]
+    branches: ["feature", "workflow", "main", "develop"]
   pull_request:
     branches: ["main"]
 
