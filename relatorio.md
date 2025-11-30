@@ -198,3 +198,4 @@ Usar issues para documentar features e bugs, e linká-los a commits/PRs, foi ót
 3. **Testes + CI = confiança:** ter uma suite de testes passando continuamente libera o time para iterar com segurança.
 4. **Documentação integrada:** manter README e este Relatório atualizado ajuda a onboard novos membros e evita retrabalho.
 5. **Refatoração iterativa:** a mudança de float para Decimal foi pequena, mas importante: não tenha medo de melhorar código.
+
