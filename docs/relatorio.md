@@ -232,6 +232,23 @@ Usar issues para documentar features e bugs, e linká-los a commits/PRs, foi ót
 - O desenvolvimento de ciclos de CI também foi um ponto que possuia pouco conhecimento, e a durante o projeto pude me aprofundar mais no assunto, também verificando a importância de ter estabelecido no projeto um workflow contento testes. Nosso workflow em certo momento foi capaz de identificar uma versão defeituosa, impedindo que propagassemos o erro em branches importantes como o main.
 - Como um todo, achei o projeto extremamente proveitoso e de muito aprendisado. Pude complementar conhecimentos de SCM, pondo em pratica todos esses aspectos em um único projeto, melhorando a compreensão geral do processo de desenvolvimento de software de maneira colaborativa com foco em SCM, garantindo controle e qualidade do produto final.
 
+## Gustavo Igor da Silva
+
+### Dificuldades e aprendizados
+
+No início do projeto, minha maior dificuldade foi transformar a teoria de Gerência de Configuração em práticas concretas no repositório. Eu já usava Git de forma isolada, mas lidar com **GitFlow**, múltiplas branches, PRs, issues, **SemVer** e trabalho em equipe expôs várias lacunas — especialmente na hora de entender o momento certo de criar/atualizar branches, sincronizar o repositório remoto (`git fetch`/`git pull`, SSH no Windows), relacionar PR com issue e resolver conflitos em arquivos compartilhados.  
+Além disso, a integração da **Google Maps Routes API** trouxe desafios extras: configuração de `.env`, tratamento de erros de comunicação, limites de uso e implementação do *fallback* para o hodômetro quando a API não está disponível. Integrar a Google Maps API mostrou a importância de isolar configurações sensíveis em arquivos `.env` e de documentar claramente dependências externas.
+
+Ao longo do projeto, essas dificuldades viraram meus principais aprendizados:
+
+- Passei a entender o **GitFlow na prática**, desde a criação de uma *feature branch* até o merge em `main` via PR revisada.  
+- Aprendi a usar **issues e PRs como ferramentas de rastreabilidade**, ligando cada mudança a uma demanda específica.  
+- Consolidei a importância do **versionamento semântico e do changelog**, entendendo como as releases (como a `1.1.0`) registram a evolução do sistema.  
+- Passei a valorizar **ambiente reprodutível e automatizado** (Docker, variáveis de ambiente, documentação), reduzindo o “funciona só na minha máquina”.  
+- Ganhei segurança para **ler código existente, propor mudanças, escrever testes e receber feedback em code reviews**, aproximando a experiência do que acontece em projetos reais.  
+- Na parte de API, entendi melhor como **isolar configurações sensíveis**, tratar falhas externas sem quebrar a aplicação e pensar sempre em estratégias de *fallback*.
+- Em relação à equipe, percebi como **comunicação clara, registro escrito (issues/PRs) e combinação prévia de tarefas** reduzem conflitos de código e retrabalho. Cada um sempre se atentou a resolver conflitos e problemas quando apareciam e de entragar as tarefas no prazo.
+
 --- 
 
 Fim do documento.
