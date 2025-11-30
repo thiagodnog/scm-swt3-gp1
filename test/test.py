@@ -1,5 +1,6 @@
 import unittest
 import tkinter as tk
+from unittest.mock import MagicMock, patch
 from app.app import MileageTracker, ExpenseCalculator
 import tempfile
 import os
