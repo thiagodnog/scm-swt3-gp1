@@ -219,6 +219,19 @@ Usar issues para documentar features e bugs, e linká-los a commits/PRs, foi ót
   - Checklist de PR obrigatório (tests, lint, doc) para acelerar a revisão e reduzir regressões.
   - Manter e evoluir o Dockerfile e os workflows de CI para criar builds automatizados e artefatos de release reproduzíveis.
 
+
+## Hugo Cardoso
+
+### Desempenho de time diverso no desenvolvimento colaborativo
+- Ficou evidente os mais diversos níveis de proficiência dos integrantes da equipe nos mas diversos assuntos sobre SCM. Apesar dessa diferença de maturidade de cada integrante, houve um esforço muito grande por parte daqueles que tinham mais experiência em auxiliar os que tinham mais dificuldades.
+- Essa sinergia colaborativa foi muito produtiva, acelerando o tempo de aprendizado daqueles que tinham mais dúvidas e acelerando o tempo de desenvolvimento do projeto.
+- Ainda sobre a diferença de experiências, cada integrante assumiu papeis nos quais se sentiam mais confortáveis. Nos momentos de rotação de resposabilidades a colaboração do time possibilitou que todos pudessem ter experiência nos diferentes papeis em um ambiente de SCM.
+
+### Visão indindividual do processo de desenvolvimento da aplicação
+- Mesmo tendo um pouco de experiência em processos de desenvolvimento e SCM, é sempre um novo desafio e uma oportunidade de aprender pontos novos. Em especial, desenvolver uma aplicação com recursos de GUI utilizando containers foi um ponto que não tinha trabalhado e que a solução foi um grande processo de aprendizado.
+- O desenvolvimento de ciclos de CI também foi um ponto que possuia pouco conhecimento, e a durante o projeto pude me aprofundar mais no assunto, também verificando a importância de ter estabelecido no projeto um workflow contento testes. Nosso workflow em certo momento foi capaz de identificar uma versão defeituosa, impedindo que propagassemos o erro em branches importantes como o main.
+- Como um todo, achei o projeto extremamente proveitoso e de muito aprendisado. Pude complementar conhecimentos de SCM, pondo em pratica todos esses aspectos em um único projeto, melhorando a compreensão geral do processo de desenvolvimento de software de maneira colaborativa com foco em SCM, garantindo controle e qualidade do produto final.
+
 --- 
 
 Fim do documento.
