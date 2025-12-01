@@ -16,10 +16,6 @@ Este documento descreve a estratégia de branching adotada, os procedimentos de 
 
 - Prefixo `hotfix/` para correções críticas que precisam ir diretamente para produção — ex.: `hotfix/fix-calc-rounding`.
 
-### Release branches (opcional)
-
-- `release/x.y` quando queremos preparar uma versão para QA e correção de última hora.
-
 ### Políticas de merge
 
 - Pull Requests (PRs) exigem revisão por pelo menos um revisor, execução bem-sucedida de CI (testes + lint) e aprovação antes do merge.
@@ -81,14 +77,12 @@ docker build -t myapp:dev .
 ## Gerenciamento de Issues (ciclo de vida de um bug/feature)
 
 - **Criação:** toda nova demanda (bug ou feature) começa com uma issue descrevendo objetivo, passos para reproduzir (se for bug), e critérios de aceitação.
-- **Triagem:** time ou mantenedor avalia prioridade, severidade, e atribui labels (ex.: `bug`, `feature`, `urgent`, `low-priority`) e milestone se aplicável.
-- **Planejamento / Backlog:** issues aprovadas entram no backlog; durante planejamento, mover para uma milestone/sprint ou marcar como prontas para desenvolvimento.
+- **Triagem:** time ou mantenedor avalia prioridade, severidade, e atribui labels (ex.: `bug`, `feature`, `urgent`, `low-priority`).
 - **Desenvolvimento:**
   - Criar branch: `feature/<issue>-descrição` ou `hotfix/<issue>` conforme o caso.
   - Linkar branch/PR à issue (número no título/descrição) para rastreabilidade.
   - Implementar alterações com commits pequenos e atômicos, incluindo testes automatizados quando pertinente.
 - **Revisão:** abrir PR e solicitar revisão de pelo menos um colega; CI deve passar antes da aprovação.
-- **QA / Validação:** após merge em `develop` (ou `main` no caso de hotfix), a versão vai para um ambiente de QA ou staging para validação manual e testes de integração.
 - **Release e fechamento:** depois de validado, a release é criada a partir de `develop` → `main` (ou diretamente de `hotfix`), tag publicada e a issue é fechada com referência à release.
 - **Feedback loop:** se regressão ou novo bug é detectado, reabrir issue ou criar nova issue vinculada, priorizar e seguir o ciclo novamente.
 
@@ -112,8 +106,8 @@ docker build -t myapp:dev .
 
 ### 2. Testes falhando e precisão de arredondamento em cálculos monetários
 
-- **Desafio:** Os testes unitários para `ExpenseCalculator` falhavam porque a arredondação de valores monetários usando Python floats + `round()` produzia resultados inesperados (ex.: 16.665 arredondava para 16.66 em vez de 16.67).
-- **Como foi lidado:** Substituímos a arredondação com float para Decimal + ROUND_HALF_UP, garantindo comportamento determinístico e correto para operações monetárias.
+- **Desafio:** Os testes unitários para `ExpenseCalculator` falhavam porque a arredondamento de valores monetários usando Python floats + `round()` produzia resultados inesperados (ex.: 16.665 arredondava para 16.66 em vez de 16.67).
+- **Como foi lidado:** Substituímos a arredondamento com float para Decimal + ROUND_HALF_UP, garantindo comportamento determinístico e correto para operações monetárias.
 - **Melhoria sugerida:** estabelecer uma política de usar `Decimal` desde o início para qualquer cálculo financeiro; documentar essa prática no guia de contribuição.
 
 ### 3. Dependências opcionais e imports defensivos
@@ -198,4 +192,64 @@ Usar issues para documentar features e bugs, e linká-los a commits/PRs, foi ót
 3. **Testes + CI = confiança:** ter uma suite de testes passando continuamente libera o time para iterar com segurança.
 4. **Documentação integrada:** manter README e este Relatório atualizado ajuda a onboard novos membros e evita retrabalho.
 5. **Refatoração iterativa:** a mudança de float para Decimal foi pequena, mas importante: não tenha medo de melhorar código.
+
+## Thiago Nogueira
+
+### Reflexões sobre colaboração e melhorias técnicas
+
+- A equipe apresentou níveis de conhecimento técnico distintos no início do projeto. Gerenciar essa diferença exigiu paciência, mais comunicação e atividades de pair programming para nivelar entendimento das ferramentas (Git, Docker, Tkinter).
+- Resolver conflitos entre features foi um desafio recorrente, especialmente quando múltiplas pessoas trabalhavam em arquivos grandes como app.py. A adoção do fluxo GitFlow (features mescladas primeiro em develop) ajudou a proteger a branch main e reduzir impactos em produção.
+- Padronizar ambientes com Dockerfile trouxe um ganho real: apesar da curva de aprendizagem inicial para alguns membros, hoje temos builds e execuções mais previsíveis. A normalização facilitou onboarding e reduziu "works on my machine".
+- Recomenda-se manter sessões curtas de formação sobre ferramentas críticas (Git, CI, Docker) e documentar procedures comuns no repositório.
+
+### Reflexões da Equipe
+
+- Desafios enfrentados:
+  - Níveis técnicos variados entre membros demandaram investimento em orientação e revisão mais detalhada.
+  - Conflitos de merge em features concorrentes exigiram disciplina em rebases/merges e comunicação prévia sobre áreas do código que seriam alteradas.
+  - A curva de aprendizado do Docker inicialmente atrasou testes locais para alguns colaboradores.
+
+- Ganhos e melhorias:
+  - O uso de GitFlow (feature → develop → main) provou ser eficaz para preservar estabilidade na main e organizar releases.
+  - A introdução do Dockerfile normalizou ambientes de desenvolvimento e execução, aumentando a reprodutibilidade e facilitando a CI.
+  - Lições compartilhadas sobre Decimal para cálculos monetários, testes e tratamento de dependências deixaram a base de código mais robusta.
+
+- Ações sugeridas:
+  - Sessões regulares de compartilhamento de conhecimento (15–30 min) para nivelar habilidades.
+  - Checklist de PR obrigatório (tests, lint, doc) para acelerar a revisão e reduzir regressões.
+  - Manter e evoluir o Dockerfile e os workflows de CI para criar builds automatizados e artefatos de release reproduzíveis.
+
+
+## Hugo Cardoso
+
+### Desempenho de time diverso no desenvolvimento colaborativo
+- Ficou evidente os mais diversos níveis de proficiência dos integrantes da equipe nos mas diversos assuntos sobre SCM. Apesar dessa diferença de maturidade de cada integrante, houve um esforço muito grande por parte daqueles que tinham mais experiência em auxiliar os que tinham mais dificuldades.
+- Essa sinergia colaborativa foi muito produtiva, acelerando o tempo de aprendizado daqueles que tinham mais dúvidas e acelerando o tempo de desenvolvimento do projeto.
+- Ainda sobre a diferença de experiências, cada integrante assumiu papeis nos quais se sentiam mais confortáveis. Nos momentos de rotação de resposabilidades a colaboração do time possibilitou que todos pudessem ter experiência nos diferentes papeis em um ambiente de SCM.
+
+### Visão indindividual do processo de desenvolvimento da aplicação
+- Mesmo tendo um pouco de experiência em processos de desenvolvimento e SCM, é sempre um novo desafio e uma oportunidade de aprender pontos novos. Em especial, desenvolver uma aplicação com recursos de GUI utilizando containers foi um ponto que não tinha trabalhado e que a solução foi um grande processo de aprendizado.
+- O desenvolvimento de ciclos de CI também foi um ponto que possuia pouco conhecimento, e a durante o projeto pude me aprofundar mais no assunto, também verificando a importância de ter estabelecido no projeto um workflow contento testes. Nosso workflow em certo momento foi capaz de identificar uma versão defeituosa, impedindo que propagassemos o erro em branches importantes como o main.
+- Como um todo, achei o projeto extremamente proveitoso e de muito aprendisado. Pude complementar conhecimentos de SCM, pondo em pratica todos esses aspectos em um único projeto, melhorando a compreensão geral do processo de desenvolvimento de software de maneira colaborativa com foco em SCM, garantindo controle e qualidade do produto final.
+
+## Gustavo Igor da Silva
+
+### Dificuldades e aprendizados
+
+No início do projeto, minha maior dificuldade foi transformar a teoria de Gerência de Configuração em práticas concretas no repositório. Eu já usava Git de forma isolada, mas lidar com **GitFlow**, múltiplas branches, PRs, issues, **SemVer** e trabalho em equipe expôs várias lacunas — especialmente na hora de entender o momento certo de criar/atualizar branches, sincronizar o repositório remoto (`git fetch`/`git pull`, SSH no Windows), relacionar PR com issue e resolver conflitos em arquivos compartilhados.  
+Além disso, a integração da **Google Maps Routes API** trouxe desafios extras: configuração de `.env`, tratamento de erros de comunicação, limites de uso e implementação do *fallback* para o hodômetro quando a API não está disponível. Integrar a Google Maps API mostrou a importância de isolar configurações sensíveis em arquivos `.env` e de documentar claramente dependências externas.
+
+Ao longo do projeto, essas dificuldades viraram meus principais aprendizados:
+
+- Passei a entender o **GitFlow na prática**, desde a criação de uma *feature branch* até o merge em `main` via PR revisada.  
+- Aprendi a usar **issues e PRs como ferramentas de rastreabilidade**, ligando cada mudança a uma demanda específica.  
+- Consolidei a importância do **versionamento semântico e do changelog**, entendendo como as releases (como a `1.1.0`) registram a evolução do sistema.  
+- Passei a valorizar **ambiente reprodutível e automatizado** (Docker, variáveis de ambiente, documentação), reduzindo o “funciona só na minha máquina”.  
+- Ganhei segurança para **ler código existente, propor mudanças, escrever testes e receber feedback em code reviews**, aproximando a experiência do que acontece em projetos reais.  
+- Na parte de API, entendi melhor como **isolar configurações sensíveis**, tratar falhas externas sem quebrar a aplicação e pensar sempre em estratégias de *fallback*.
+- Em relação à equipe, percebi como **comunicação clara, registro escrito (issues/PRs) e combinação prévia de tarefas** reduzem conflitos de código e retrabalho. Cada um sempre se atentou a resolver conflitos e problemas quando apareciam e de entragar as tarefas no prazo.
+
+--- 
+
+Fim do documento.
 

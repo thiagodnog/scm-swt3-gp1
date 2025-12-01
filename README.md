@@ -10,6 +10,15 @@ A ferramenta automatiza o cálculo da distância e permite a exportação de tod
 - Cálculo de Despesas: Consolida o custo total baseado na quilometragem, pedágios e taxas de estacionamento.
 - Exportação de Dados: Gera e exporta os dados e cálculos da viagem para um arquivo .csv.
 
+## Organização de pastas
+- docs/: documentação do projeto.
+  - docs/relatorio.md — relatório de processos de desenvolvimento, branching, CI/CD e reflexões da equipe.
+  - docs/changelog.md — histórico de alterações (CHANGELOG) seguindo o padrão "Keep a Changelog".
+- app/: código fonte da aplicação (contém app/app.py e demais módulos).
+- data/: pasta para persistência local dos registros (trips.csv) — geralmente montada como volume ao rodar o container.
+- test/: testes automatizados (unittest).
+- Dockerfile, README.md, .env.example e demais arquivos de configuração na raiz do repositório.
+
 ## Executando a aplicação
 
 1. Faça clone do repositório ou baixe o ZIP.

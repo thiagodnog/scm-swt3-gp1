@@ -1,1 +1,0 @@
-Emissão inicial
